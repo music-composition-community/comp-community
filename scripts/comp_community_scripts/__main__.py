@@ -36,19 +36,6 @@ class Composition(cli.Application):
             return 1
 
 
-@Composition.subcommand("shell")
-class OllieShell(cli.Application):
-
-    root = cli.Flag("--root", default=False)
-
-    def main(self, service='api'):
-        # We will need to expand on this to make it work more like the Ollie
-        # shell, but this is fine for the time being.
-        args = ['exec', service, 'script', '-q', '/dev/null', '-c', 'bash -i']
-        with local.cwd(root_dir):
-            docker_compose[args] & FG(retcode=None)
-
-
 @Composition.subcommand("setup")
 class CompositionSetup(CompositionApplication):
 
