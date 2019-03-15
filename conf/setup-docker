@@ -1,0 +1,69 @@
+#!/bin/bash
+set -eo pipefail
+trap '{ exit 1; }' INT
+
+source ./conf/paths.sh
+source ./conf/output.sh
+source ./conf/docker.sh
+source ./conf/git.sh
+source ./conf/pip.sh
+source ./conf/homebrew.sh
+source ./conf/io.sh
+
+validate_docker_setup
+
+# This isn't working currently
+# docker_prepare
+
+prepare_homebrew() {
+    # TODO: If we wind up using any other homebrew packages, make sure that we check
+    # if they are installed here.  Examples might be:
+    # (1) unison
+    # (2) fswatch
+    # (3) Whatever database we wind up using (mysql for example)
+    check_homebrew_install
+    check_homebrew_package git
+
+    if [ ! -e /usr/local/bin/python3.6 ]; then
+        check_homebrew_package python@3.6
+    fi
+}
+
+install_comp_scripts(){
+    installing "Installing comp script"
+    pushd "${COMP_ROOT}/scripts" >/dev/null
+    "${PYTHON_DIR}" setup.py develop
+    popd > /dev/null
+    end_step
+}
+
+clone_sub_repositories(){
+    intro "Checking for comp-community-api repo..."
+    if [ -e "${COMP_ROOT}/www/api/.git/HEAD" ]; then
+        success "comp-community-api repository is already cloned."
+        end_step
+    else
+        installing "Cloning comp-community-api repository"
+        git clone git@github.com:${API_REPO} "${API_ROOT}" \
+            || throw_error "Could not clone comp-community-api"
+        end_step
+    fi
+}
+
+prepare_homebrew
+
+pip_check_install virtualenv
+check_virtualenv_install
+
+check_gitconfig_exists
+
+# Currently having an issue with conflicting ports
+# check_listening_ports
+
+clone_sub_repositories
+install_comp_scripts
+
+end_step
+success "All comp-community prerequisites satisfied, run:"
+echo ">>> . bin/activate"
+echo ">>> comp setup"

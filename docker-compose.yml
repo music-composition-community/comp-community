@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    expose:
+      - 5432
+  api:
+    build:
+      context: ./www/api
+      dockerfile: api.docker
+    volumes:
+      - /:/www/api
+    privileged: true
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
