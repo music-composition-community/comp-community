@@ -9,6 +9,7 @@ source ./conf/git.sh
 source ./conf/pip.sh
 source ./conf/homebrew.sh
 source ./conf/io.sh
+source ./conf/setup-scripts
 
 validate_docker_setup
 
@@ -29,13 +30,8 @@ prepare_homebrew() {
     fi
 }
 
-install_comp_scripts(){
-    installing "Installing comp script"
-    pushd "${COMP_ROOT}/scripts" >/dev/null
-    "${PYTHON_DIR}" setup.py develop
-    popd > /dev/null
-    end_step
-}
+echo "Setting up scripts"
+install_comp_scripts
 
 clone_sub_repositories(){
     intro "Checking for comp-community-api repo..."

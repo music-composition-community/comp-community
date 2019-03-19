@@ -1,0 +1,7 @@
+#!/bin/bash
+set -eo pipefail
+trap '{ exit 1; }' INT
+
+source ./conf/scripts.sh
+
+install_comp_scripts

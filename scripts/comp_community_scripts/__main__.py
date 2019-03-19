@@ -52,6 +52,28 @@ class CompositionSetup(CompositionApplication):
             logger.error("Error during setup: %s" % e)
 
 
+@Composition.subcommand("migrate")
+class CompositionMigrate(cli.Application):
+
+    port = app_ports['api']
+
+    def main(sel, *args):
+        with local.cwd(root_dir):
+            """
+            TODO:
+            -----
+            We have to add a --user flag here, that we should register
+            somewhere before this point (probably in DockerFile).
+
+            Then, we would want to run the binary in /api/bin/manage
+            >>> docker_compose['exec', 'api', '--user', 'xxx',
+            >>>     '/api/bin/manage', 'migrate']
+            """
+            docker_compose[
+                'exec', 'api', '/api/apps/manage.py', 'migrate',
+            ] & FG
+
+
 @Composition.subcommand("start")
 class CompositionStart(CompositionApplication):
 
@@ -81,6 +103,11 @@ class CompositionStart(CompositionApplication):
 def main():
     Composition.run()
 
+
+# TODO: Start using docker SDK
+# import docker
+# client = docker.from_env()
+# print client
 
 if __name__ == '__main__':
     main()

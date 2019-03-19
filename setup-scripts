@@ -1,0 +1,11 @@
+#!/bin/bash
+
+chmod -R 755 ./conf
+
+export COMP_ROOT=${PWD}
+export SCRIPTS_ROOT="${COMP_ROOT}/scripts"
+export API_ROOT="${COMP_ROOT}/scripts"
+export PYTHON_DIR="${COMP_ROOT}/bin/python3.6"
+
+
+exec ./conf/setup-scripts
