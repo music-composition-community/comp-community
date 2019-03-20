@@ -1,1 +1,0 @@
-apps/settings/local/secret_keys.py filter=git-crypt diff=git-crypt

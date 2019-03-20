@@ -2,9 +2,9 @@ version: '3'
 
 services:
   db:
-    image: postgres
+    image: comp-mysql
     expose:
-      - 5432
+      - 3306
   api:
     build:
       context: ./www/api
