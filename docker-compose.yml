@@ -1,10 +1,22 @@
 version: '3'
 
 services:
-  db:
-    image: comp-mysql
-    expose:
-      - 3306
+  # MySQL is being a pain in the ass working with Pytohn3.7, it is having trouble
+  # finding the mysql_config file, which is in /usr/local/.  For now, we are just
+  # going to use sqlite.db until we decide to go with PostGreSQL or MySQL.
+  # mysqld:
+  #   image: mysql
+  #   environment:
+  #     - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+  #     - MYSQL_DATABASE=comp_community_db
+  #     - MYSQL_PASSWORD=password
+  #     - MYSQL_USER=nickflorin
+  #   volumes:
+  #     - ./mysqld:/docker-entrypoint-initdb.d/:ro
+  #   ports:
+  #     - "3306:3306"
+  #   expose:
+  #     - 3306
   api:
     build:
       context: ./www/api
@@ -14,5 +26,5 @@ services:
     privileged: true
     ports:
       - "8000:8000"
-    depends_on:
-      - db
+    # depends_on:
+    #   - mysqld

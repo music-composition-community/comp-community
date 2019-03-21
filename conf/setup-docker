@@ -17,18 +17,20 @@ validate_docker_setup
 # docker_prepare
 
 prepare_homebrew() {
-    # TODO: If we wind up using any other homebrew packages, make sure that we check
-    # if they are installed here.  Examples might be:
-    # (1) unison
-    # (2) fswatch
-    # (3) Whatever database we wind up using (mysql for example)
     check_homebrew_install
     check_homebrew_package git
 
-    if [ ! -e /usr/local/bin/python3.6 ]; then
-        check_homebrew_package python@3.6
+    # MySQL is being a pain in the ass working with Pytohn3.7, it is having trouble
+    # finding the mysql_config file, which is in /usr/local/.  For now, we are just
+    # going to use sqlite.db until we decide to go with PostGreSQL or MySQL.
+    # check_homebrew_package mysql
+    # check_homebrew_package mysql-client
+
+    if [ ! -e /usr/local/bin/python3.7 ]; then
+        check_homebrew_package python@3.7
     fi
 }
+
 
 echo "Setting up scripts"
 install_comp_scripts
