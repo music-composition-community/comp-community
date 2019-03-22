@@ -1,7 +1,7 @@
 #!/bin/bash
 
-source "./conf/io.sh"
-source "./conf/output.sh"
+source "./config/io.sh"
+source "./config/output.sh"
 
 
 validate_docker_setup(){

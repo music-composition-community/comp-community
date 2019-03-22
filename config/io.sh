@@ -1,5 +1,6 @@
 #!/bin/bash
-source "./conf/output.sh"
+
+source "./config/output.sh"
 
 get_sudo() {
     sudo whoami > /dev/null

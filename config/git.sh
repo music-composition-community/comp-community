@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source "./conf/output.sh"
+source "./config/output.sh"
 
 
 set_git_config() {

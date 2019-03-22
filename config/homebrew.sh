@@ -1,5 +1,6 @@
 #!/bin/bash
-source "./conf/output.sh"
+
+source "./config/output.sh"
 
 check_homebrew_install() {
     intro "Checking if homebrew installed..."

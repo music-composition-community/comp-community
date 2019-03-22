@@ -2,14 +2,14 @@
 set -eo pipefail
 trap '{ exit 1; }' INT
 
-source ./conf/paths.sh
-source ./conf/output.sh
-source ./conf/docker.sh
-source ./conf/git.sh
-source ./conf/pip.sh
-source ./conf/homebrew.sh
-source ./conf/io.sh
-source ./conf/setup-scripts
+source ./config/paths.sh
+source ./config/output.sh
+source ./config/docker.sh
+source ./config/git.sh
+source ./config/pip.sh
+source ./config/homebrew.sh
+source ./config/io.sh
+source ./config/setup-scripts
 
 validate_docker_setup
 

@@ -1,5 +1,6 @@
 #!/bin/bash
-source "./conf/output.sh"
+
+source "./config/output.sh"
 
 pip_check_install() {
     intro "Checking for pip package '$1...'"

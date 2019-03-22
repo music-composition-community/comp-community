@@ -1,6 +1,6 @@
 from __future__ import print_function
 
-from os.path import join, dirname, realpath
+import os
 
 from plumbum import cli, local
 from plumbum.cmd import docker_compose
@@ -18,13 +18,20 @@ from .base import CompositionApplication
 
 local.env["COMPOSE_HTTP_TIMEOUT"] = "6000"
 
-scripts_dir = local.path(realpath(join(dirname(__file__), "..")))
+# TODO: See if we can tie these in with export SCRIPTS_ROOT="${COMP_ROOT}/scripts"
+# in env.sh.
+scripts_dir = local.path(os.path.realpath(os.path.join(os.path.dirname(__file__), "..")))
 root_dir = scripts_dir / '..'
 
 logger = get_logger()
 
 
 class Composition(cli.Application):
+    """
+    TODO:
+    ------
+    Might be useful to start using Docker SDK.
+    """
     VERSION = __version__
 
     def main(self, *args):
@@ -74,6 +81,40 @@ class CompositionMigrate(cli.Application):
             ] & FG
 
 
+@Composition.subcommand("shell")
+class CompositionShell(cli.Application):
+    """
+    Opens a bash shell.
+    """
+    root = cli.Flag("--root", default=False)
+
+    def _get_user(self, service='api'):
+        user = 'root'
+        if self.root:
+            return user
+        if service == 'api':
+            return 'apiuser'
+        return user
+
+    def _get_bash_cmd(self, service='api'):
+        # Here is where we could add a custom config file for BASH.
+        # bash_cmd = 'bash --init-file ~/.ollierc -i'
+        service_cmds = {
+            'default': 'bash -i',
+            # 'api': 'bash --init-file ~/.apirc -i'
+            'api': 'bash --init-file /api/.apirc -i'
+        }
+        return service_cmds[service]
+
+    def main(self, service='api'):
+        user = self._get_user(service=service)
+        bash_cmd = self._get_bash_cmd(service=service)
+
+        with local.cwd(root_dir):
+            docker_compose['-f', 'docker-compose.yml', 'exec', '--user', user,
+                'api', 'script', '-q', '/dev/null', '-c', bash_cmd] & FG(retcode=None)
+
+
 @Composition.subcommand("start")
 class CompositionStart(CompositionApplication):
 
@@ -103,11 +144,6 @@ class CompositionStart(CompositionApplication):
 def main():
     Composition.run()
 
-
-# TODO: Start using docker SDK
-# import docker
-# client = docker.from_env()
-# print client
 
 if __name__ == '__main__':
     main()

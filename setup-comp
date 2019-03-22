@@ -1,13 +1,5 @@
 #!/bin/bash
 
-chmod -R 755 ./conf
+source ./env
 
-export COMP_ROOT=${PWD}
-export SCRIPTS_ROOT="${COMP_ROOT}/scripts"
-export API_ROOT="${COMP_ROOT}/scripts"
-export PYTHON_DIR="${COMP_ROOT}/bin/python3.7"
-
-export DOCKER_CONTAINER_DIR="$HOME/Library/Containers/com.docker.docker/Data"
-export COMP_API_REPO="music-composition-community/comp-community-api.git"
-
-exec ./conf/setup-docker
+exec ./config/setup-docker
